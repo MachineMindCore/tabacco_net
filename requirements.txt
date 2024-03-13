@@ -1,3 +1,6 @@
--e git+https://github.com/MachineMindCore/ComputeNet@cdaf092001dc549cb4fd0bef1c95a0560b4283eb#egg=compute_net
+cairocffi==1.6.1
+cffi==1.16.0
+-e git+https://github.com/MachineMindCore/ComputeNet@eb0d86b34475d9a8bd6e4e28ba02a2c77521db17#egg=compute_net
 igraph==0.11.4
+pycparser==2.21
 texttable==1.7.0
