@@ -1,41 +1,10 @@
 import igraph as ig
 
-def agency_families(tobacco_graph):
-    # Dictionary to store accumulated nodes by agency family
-    new_g = ig.Graph(directed=tobacco_graph.is_directed())
-    accumulated_nodes = {}
-
-    # Iterate over nodes to accumulate by agency family id
-    node_id = 0
-    for node in tobacco_graph.vs:
-        agency_family_id = int(node['agency'])
-        agency_name = node['vertexnames'].split("-")[0]
-        if agency_family_id not in accumulated_nodes:
-            accumulated_nodes[agency_family_id] = []
-            new_g.add_vertex(
-                id=node_id,
-                agency=agency_family_id,
-                vertexnames=agency_name,
-            )
-            node_id += 1
-        accumulated_nodes[agency_family_id].append(node.index)
-
-
-    # Accumulate collab values for edges between agencies
-    collab_accumulator = {}
-    for edge in tobacco_graph.es:
-        source_agency = int(tobacco_graph.vs[edge.source]['agency'])
-        target_agency = int(tobacco_graph.vs[edge.target]['agency'])
-        collab = edge['collab']
-        if (source_agency, target_agency) not in collab_accumulator:
-            collab_accumulator[(source_agency, target_agency)] = 0
-        collab_accumulator[(source_agency, target_agency)] += collab
-
-    # Add edges to the new graph
-    for (source_agency, target_agency), collab in collab_accumulator.items():
-        new_g.add_edge(source_agency, target_agency, collab=collab)
-
-    return new_g
+def extract_group(tobacco_graph):
+    extracted_vertex = tobacco_graph.vs.select(lambda vertex: "CMS" in vertex.attributes()["vertexnames"])
+    indices = [v.index for v in extracted_vertex]
+    subgraph = tobacco_graph.subgraph(indices)
+    return subgraph
 
 
 def agency_families_gpt(tobacco_graph):
